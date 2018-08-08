@@ -13,7 +13,7 @@ import {MyButton} from './components'
 
 const items = [];
 
-export default class App extends Component {
+export default class App extends Component{
   constructor(props){
     super(props);
 
@@ -37,7 +37,7 @@ export default class App extends Component {
 
   renderItem(item){
     return(
-    <View key={Date.now()} style={styles.item}> 
+    <View key={item} style={styles.item}> 
       <Text style={styles.itemText}>
         {item}
       </Text>
