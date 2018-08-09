@@ -6,9 +6,9 @@ export default class ToDo extends React.Component{
 
 render(){
     return(
-        <View key={this.props.item} style={styles.item}> 
-            <Text style={styles.itemText}>
-            {this.props.item}
+        <View key={Date.now().toString()}  style={styles.item}> 
+            <Text key={Date.now().toString()} style={styles.itemText}>
+            {this.props.name}
             </Text>
         </View>
     

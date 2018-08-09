@@ -9,7 +9,7 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View,ScrollView,TextInput,AsyncStorage} from 'react-native';
 
-import {MyButton} from './components'
+import {MyButton,ToDo} from './components'
 
 const items = [];
 
@@ -27,8 +27,9 @@ export default class App extends Component{
   addItem(){
    // console.warn(this.state.toDO)
 
-    items.push(this.state.toDO)
+    items.push(this.state.toDO);
 
+    
 
     this.setState({toDO:''})
   }
@@ -58,9 +59,12 @@ export default class App extends Component{
           </View>
         </View>
         <View style={{backgroundColor:'black',height:0.5,marginHorizontal:10}}></View>
+  
         <ScrollView>
           {
-            items.map(((item) => this.renderItem(item)))
+            //items.map(((item) => this.renderItem(item)))
+            items.map(((item) => <ToDo name={item} /> ))
+            
           }
 
         </ScrollView>
