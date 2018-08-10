@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View,ScrollView,TextInput,AsyncStorage} from 'react-native';
+import {Platform, StyleSheet, Text, View,ScrollView,TextInput,AsyncStorage,TouchableOpacity} from 'react-native';
 
-import {MyButton,ToDo} from './components'
+import {MyButton,ToDo} from './components';
 
 const sleep = (milliseconds) => {
   return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
+
+
   //var items = '{"Notes":[{"ID":"1","note":"selam"},{"ID":"2","note":"aleykim"}]}';
 
 export default class App extends Component{
@@ -13,65 +15,47 @@ export default class App extends Component{
     super(props);
 
     this.addItem = this.addItem.bind(this);
-    this.iniitalFunc = this.iniitalFunc.bind(this);
-    this.seeItems = this.seeItems.bind(this);
+    this.clearItems = this.clearItems.bind(this);
+    this.getItem = this.getItem.bind(this);
+    this.setItem = this.setItem.bind(this);
 
   }
 
   state = {
     toDO : '',
-    notes:'',
-  }
+    notes:'sdfs',
+  };
 
-  iniitalFunc(){
-    var initialValue = '{"Notes":[{"ID":"1","note":"selam"},{"ID":"2","note":"aleykim"}]}';
-    AsyncStorage.setItem("notes",initialValue);
-  }
+  
 
-  seeItems(){
-    var notes = AsyncStorage.getItem("notes");
-
-    AsyncStorage.getItem("notes").then((value) => {
-      this.setState({"notes": value});
-  });
-
-    //Jnotes = JSON.parse(notes);
-    //Xnotes = notes.toString();
-    //alert(Jnotes.Notes[0].ID);
-    //alert(Xnotes);
-  }
 
 
   addItem(){  
-  
-      var date = Date.now().toString();
-
-      // When app starts we have taken Notes and convert it Jnotes
-      // Now we will take our new todo item and add to our Jnotes after J it.
-      //var notes = AsyncStorage.getItem("notes");
-      AsyncStorage.getItem("notes").then((value) => {
-        this.setState({"savingNote": value});
-    });
-     var saving;
-    sleep(500).then(() => {
-      saving = (this.state.savingNote);
-    
-    });
-    this.setState.aq = saving;
-    //asvar Jnotes = JSON.parse(saving);
-    
-      
-      //myObj = this.state.toDO;
-  
-      //Jnotes['Notes'].unshift({"ID":date,"note": myObj});
-      //sendNote = JSON.stringify(Jnotes);
-      //AsyncStorage.setItem("notes",sendNote);
-      // Unshift means we add new item top of the list
 
       // Clear the text area
       this.setState({toDO:''});
    
 }
+
+
+clearItems(){  
+
+AsyncStorage.clear();
+
+}
+
+
+getItem(){  
+  async () => {
+  const getValue = await AsyncStorage.getItem("notes");
+  this.setState({notes: getValue});
+}}
+
+setItem(){  
+  async () => {
+    await AsyncStorage.setItem("notes", this.state.toDO);
+  }};
+
 
   render() {
     return (
@@ -84,23 +68,21 @@ export default class App extends Component{
             </TextInput>
           </View>
           <View style={styles.right}>
-            <MyButton onPress={this.addItem} text={'Ekle'} />
+            <MyButton onPress={this.setItem} text={'Ekle'} />
           </View>
         </View>
         <View style={{backgroundColor:'black',height:0.5,marginHorizontal:10}}></View>
-     <View style={{height:300}}>
-
-           <MyButton onPress={this.iniitalFunc} text={'INITIAL'} />
-            <MyButton onPress={this.seeItems} text={'SEE'} />
-            <Text style={{flex:1}}>
-              {this.state.notes}
-            </Text>
-            <Text style={{flex:1}}>
-              {this.state.aq}
-            </Text>
 
 
-     </View>
+        <View style={{height:100,marginHorizontal:10,flexDirection:'row'}}>
+        <TouchableOpacity style={{flex:1}} onPress={this.clearItems}><Text>Clear</Text></TouchableOpacity>
+        <TouchableOpacity style={{flex:1}} onPress={this.getItem}><Text>GET</Text></TouchableOpacity>
+        <TouchableOpacity style={{flex:1}} onPress={this.setItem}><Text>SET</Text></TouchableOpacity>
+        <Text style={{flex:1}} >{this.state.notes}</Text>
+
+
+        </View>
+
         <ScrollView>
           
             {
