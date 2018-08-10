@@ -16,9 +16,7 @@ export default class App extends Component{
 
     this.addItem = this.addItem.bind(this);
     this.clearItems = this.clearItems.bind(this);
-    this.getItem = this.getItem.bind(this);
-    this.setItem = this.setItem.bind(this);
-
+ 
   }
 
   state = {
@@ -29,12 +27,49 @@ export default class App extends Component{
   
 
 
+  initialFunc(){
+    //let user = 'John Doe';
+    let obj = {"notes":[ ]}
+    //AsyncStorage.setItem('user',user);
+    AsyncStorage.setItem('user',JSON.stringify(obj));
+   
+  }
 
-  addItem(){  
+  displayData = async () => {
+    try {
+      let user = await AsyncStorage.getItem('user');
+      let parsed = JSON.parse(user);
+      let newObj = '{"id":"3","note":"ass"}'; // New todo will be like this
+      let parsedNewObj = JSON.parse(newObj);
+      parsed.notes.unshift(parsedNewObj); // It will pass tp
+      alert(parsed.notes[0].note);
+      //alert(user);
+    } catch (error) {
+      alert("error"+error);
+    }
+  }
 
+
+  dData = async () => {
+    try {
+      let user = await AsyncStorage.getItem('user');
+      let parsed = JSON.parse(user);
+      let newObj = '{"id":"6","note":"'+this.state.toDO+'"}'; // New todo will be like this
+      let parsedNewObj = JSON.parse(newObj);
+      parsed.notes.unshift(parsedNewObj); // It will pass tp
+      alert(parsed.notes[0].note);
+      //alert(user);
+    } catch (error) {
+      alert("error"+error);
+    }
+  }
+
+
+
+
+addItem(){  
       // Clear the text area
       this.setState({toDO:''});
-   
 }
 
 
@@ -45,16 +80,6 @@ AsyncStorage.clear();
 }
 
 
-getItem(){  
-  async () => {
-  const getValue = await AsyncStorage.getItem("notes");
-  this.setState({notes: getValue});
-}}
-
-setItem(){  
-  async () => {
-    await AsyncStorage.setItem("notes", this.state.toDO);
-  }};
 
 
   render() {
@@ -68,17 +93,16 @@ setItem(){
             </TextInput>
           </View>
           <View style={styles.right}>
-            <MyButton onPress={this.setItem} text={'Ekle'} />
+            <MyButton onPress={this.dData} text={'Ekle'} />
           </View>
         </View>
         <View style={{backgroundColor:'black',height:0.5,marginHorizontal:10}}></View>
 
 
         <View style={{height:100,marginHorizontal:10,flexDirection:'row'}}>
-        <TouchableOpacity style={{flex:1}} onPress={this.clearItems}><Text>Clear</Text></TouchableOpacity>
-        <TouchableOpacity style={{flex:1}} onPress={this.getItem}><Text>GET</Text></TouchableOpacity>
-        <TouchableOpacity style={{flex:1}} onPress={this.setItem}><Text>SET</Text></TouchableOpacity>
-        <Text style={{flex:1}} >{this.state.notes}</Text>
+        <TouchableOpacity style={{flex:1}} onPress={this.initialFunc}><Text>Save Data</Text></TouchableOpacity>
+        <TouchableOpacity style={{flex:1}} onPress={this.displayData}><Text>Display Data</Text></TouchableOpacity>
+        <Text style={{flex:1}} >{this.state.toDO}</Text>
 
 
         </View>
