@@ -11,7 +11,7 @@ import {AddButton} from './components';
 
       this.todo = this.todo.bind(this);
       this.lab = this.lab.bind(this);
-      this.show = this.show.bind(this);
+    
     
     }
     state = {
@@ -19,13 +19,7 @@ import {AddButton} from './components';
       newNote: '',
     };
 
-    show(){
-      if(this.state.note){
-        let notlar = JSON.parse(this.state.note);
-        notlar.Notes.map( (x) => items.push(x.note));
-      }
-    };
-
+ 
     lab(){
       let date = Date.now().toString(); //unique key of each item
 
@@ -63,7 +57,12 @@ import {AddButton} from './components';
 
 
     render(){
-   
+      if(this.state.note){
+      
+        let notlar = JSON.parse(this.state.note);
+        notlar.Notes.map( (x) => items.push(x.note));
+      }
+    
       return(
         <View style={styles.container}>
           <View style={styles.topContainer}>
@@ -85,7 +84,7 @@ import {AddButton} from './components';
           <View style={styles.seperator}></View>
           
           <ScrollView>
-            {this.show()}
+           
             { 
               items.map( (item) => this.todo(item) )
             }
