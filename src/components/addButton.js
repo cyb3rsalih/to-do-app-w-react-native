@@ -6,7 +6,7 @@ export default class AddButton extends Component{
     render(){
         return(
             <View style={styles.buttonContainer}>
-                <TouchableOpacity style={[styles.center,styles.button]} >
+                <TouchableOpacity onPress={this.props.onPress} style={[styles.center,styles.button]} >
                     <Text style={styles.buttonText}>{this.props.text}</Text>  
                 </TouchableOpacity>
             </View>

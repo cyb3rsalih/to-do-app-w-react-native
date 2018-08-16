@@ -9,9 +9,33 @@ import {AddButton} from './components';
       super(props);
 
       this.todo = this.todo.bind(this);
+      this.lab = this.lab.bind(this);
+      this.show = this.show.bind(this);
+    
+    }
+    state = {
+      note : 'as',
+      newNote: 'asdasdas',
+    };
+
+    show(){
+      allNotes = JSON.parse(this.state.note);
+      alert(JSON.stringify(allNotes))
     }
 
-    todo(item){ 
+    lab(){
+      let date = Date.now().toString(); //unique key of each item
+
+      allNotes = JSON.parse(this.state.note);
+      
+      let newObj = '{"id":"'+date+'","note":"'+this.state.newNote+'"}'; // New todo item
+
+      allNotes.Notes.unshift(JSON.parse(newObj));
+      //alert(JSON.stringify(allNotes))
+      AsyncStorage.setItem("Notes",JSON.stringify(allNotes));
+    }
+
+    todo(item,run){ 
        return(
           
             <View style={[styles.todoWrapper,styles.center]}>
@@ -20,7 +44,7 @@ import {AddButton} from './components';
                 <Text style={[styles.todoText]}>{item}</Text>
               </View>
               <View style={styles.todoRight}>
-                <TouchableOpacity style={styles.todoTouch}/>
+                <TouchableOpacity onPress={run} style={styles.todoTouch}/>
               </View>
              
             </View>
@@ -28,6 +52,14 @@ import {AddButton} from './components';
         );
       };
     
+    componentWillMount(){
+      AsyncStorage.getItem("Notes").then((value) => {
+     value ? this.setState({note:value}) : this.setState({note:'{"Notes":[]}'}); 
+    });
+    }
+   
+
+
 
     render(){
       return(
@@ -36,33 +68,29 @@ import {AddButton} from './components';
           <View style={styles.top}>
           
             <View style={styles.topLeft}>
-              <TextInput style={styles.textInput}></TextInput>
+              <TextInput value={this.state.newNote} onChangeText={(v) => this.setState({newNote:v}) } placeholder={'Yapılacaklarım'} style={styles.textInput}>
+             
+              </TextInput>
             </View>
             <View style={styles.topRight}>
-              <AddButton text={"Add"}/>
+              <AddButton onPress={this.lab} text={"Add"}/>
             </View>    
 
           </View>
-
           </View>
           <View style={styles.bot}>
-
+        
           <View style={styles.seperator}></View>
           
           <ScrollView>
-          {this.todo('doktora gidip heyet raporu')}
 
-          {this.todo('aleyküm')}
-          {this.todo('aleyküm')}
+          {this.todo('Lab çalıştır',this.show)}
 
-          {this.todo('aleykümsadaleysdsd-sds--')}
-
-
+      
 
           </ScrollView>
-          
           </View>
-            
+          
         
         </View>
       );
@@ -101,6 +129,8 @@ const styles = StyleSheet.create({
   },
   bot:{flex:3,
     //backgroundColor:'red'
+    justifyContent:'center',
+    //salignItems:'center',
   },
   textInput:{
     flex:1,
@@ -145,7 +175,7 @@ const styles = StyleSheet.create({
   },
   seperator:{
     height:1,
-    width:1000,
+    width:500,
     backgroundColor:'black',
     overflow:'hidden'
   },
