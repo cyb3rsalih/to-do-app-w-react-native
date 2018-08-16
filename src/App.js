@@ -3,7 +3,9 @@ import { View,Text,TouchableOpacity,TextInput,ScrollView,AsyncStorage,StyleSheet
 
 import {AddButton} from './components';
 
-  const items =[];
+ /* This is for show the items,
+ I cannot show items unless take them to a global variable*/
+  const items =[]; 
 
   export default class App extends Component{
     constructor(props){
@@ -14,6 +16,9 @@ import {AddButton} from './components';
     
     
     }
+
+    /* State note for carry the whole todo list as JSON array string
+    state newNote for carry the new todo item */
     state = {
       note : '',
       newNote: '',
