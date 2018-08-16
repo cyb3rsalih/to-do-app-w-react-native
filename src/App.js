@@ -1,8 +1,9 @@
 import React ,{Component} from "react";
-import { View,Text,TouchableOpacity,TextInput,ScrollView,AsyncStorage,StyleSheet,Platform} from "react-native";
+import { View,Text,TouchableOpacity,TextInput,ScrollView,AsyncStorage,StyleSheet,Platform,ActivityIndicator} from "react-native";
 
 import {AddButton} from './components';
 
+  const items =[];
 
   export default class App extends Component{
     constructor(props){
@@ -14,14 +15,16 @@ import {AddButton} from './components';
     
     }
     state = {
-      note : 'as',
-      newNote: 'asdasdas',
+      note : '',
+      newNote: '',
     };
 
     show(){
-      allNotes = JSON.parse(this.state.note);
-      alert(JSON.stringify(allNotes))
-    }
+      if(this.state.note){
+        let notlar = JSON.parse(this.state.note);
+        notlar.Notes.map( (x) => items.push(x.note));
+      }
+    };
 
     lab(){
       let date = Date.now().toString(); //unique key of each item
@@ -35,33 +38,32 @@ import {AddButton} from './components';
       AsyncStorage.setItem("Notes",JSON.stringify(allNotes));
     }
 
-    todo(item,run){ 
-       return(
-          
-            <View style={[styles.todoWrapper,styles.center]}>
+    todo(item){ 
+      return(
+         
+           <View style={[styles.todoWrapper,styles.center]}>
 
-              <View style={styles.todoLeft}>
-                <Text style={[styles.todoText]}>{item}</Text>
-              </View>
-              <View style={styles.todoRight}>
-                <TouchableOpacity onPress={run} style={styles.todoTouch}/>
-              </View>
-             
-            </View>
-          
-        );
-      };
+             <View style={styles.todoLeft}>
+               <Text style={[styles.todoText]}>{item}</Text>
+             </View>
+             <View style={styles.todoRight}>
+               <TouchableOpacity style={styles.todoTouch}/>
+             </View>
+            
+           </View>
+         
+       );
+     };
     
-    componentWillMount(){
+    componentDidMount(){
       AsyncStorage.getItem("Notes").then((value) => {
      value ? this.setState({note:value}) : this.setState({note:'{"Notes":[]}'}); 
     });
     }
-   
-
 
 
     render(){
+   
       return(
         <View style={styles.container}>
           <View style={styles.topContainer}>
@@ -83,11 +85,10 @@ import {AddButton} from './components';
           <View style={styles.seperator}></View>
           
           <ScrollView>
-
-          {this.todo('Lab çalıştır',this.show)}
-
-      
-
+            {this.show()}
+            { 
+              items.map( (item) => this.todo(item) )
+            }
           </ScrollView>
           </View>
           
@@ -179,4 +180,10 @@ const styles = StyleSheet.create({
     backgroundColor:'black',
     overflow:'hidden'
   },
+  activityIndicator: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 80
+ },
 });
