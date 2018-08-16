@@ -19,19 +19,24 @@ import {AddButton} from './components';
       newNote: '',
     };
 
- 
+    /* Enter the Add button this will work
+    // This function firstly create unique key for next item
+    // fetch the current list as JSON object array
+    // take the new to do item and convert it to JSON object
+    Add the new item to array and send it to Storage. */
     lab(){
       let date = Date.now().toString(); //unique key of each item
 
-      allNotes = JSON.parse(this.state.note);
+      allNotes = JSON.parse(this.state.note); // Take notes - It comes to state from componentDidMount
       
-      let newObj = '{"id":"'+date+'","note":"'+this.state.newNote+'"}'; // New todo item
+      let newObj = '{"id":"'+date+'","note":"'+this.state.newNote+'"}'; // New todo item JSON object
 
-      allNotes.Notes.unshift(JSON.parse(newObj));
+      allNotes.Notes.unshift(JSON.parse(newObj)); // Add the new to array
       //alert(JSON.stringify(allNotes))
-      AsyncStorage.setItem("Notes",JSON.stringify(allNotes));
+      AsyncStorage.setItem("Notes",JSON.stringify(allNotes));  // Send the new array to Storage
     }
 
+    /* This function works for each todo item */
     todo(item){ 
       return(
          
@@ -48,17 +53,28 @@ import {AddButton} from './components';
          
        );
      };
-    
+
+
+    /* It will work after rendering
+    This function takes the current list from the Storage, If there is no data
+    it creates a free one.
+    */
     componentDidMount(){
       AsyncStorage.getItem("Notes").then((value) => {
-     value ? this.setState({note:value}) : this.setState({note:'{"Notes":[]}'}); 
+      value ? this.setState({note:value}) : this.setState({note:'{"Notes":[]}'}); 
     });
     }
 
 
     render(){
+       /* 
+       Render method works twice because of componentDidMount's setState. 
+       The first render there is no data in the state.note. 
+       I put the function to in if statement to works only if there is data
+     */
       if(this.state.note){
-      
+        // It takes the data and prepare to show. 
+        // I send the each todo item to a const items object. 
         let notlar = JSON.parse(this.state.note);
         notlar.Notes.map( (x) => items.push(x.note));
       }
@@ -86,6 +102,7 @@ import {AddButton} from './components';
           <ScrollView>
            
             { 
+              // This shows item
               items.map( (item) => this.todo(item) )
             }
           </ScrollView>
@@ -99,6 +116,7 @@ import {AddButton} from './components';
   }
 
 // TODO Styles Will go to another js file
+// Stylesheets, I try to make it seperate but cannot.
 const styles = StyleSheet.create({
   container:{
     flex:1,
