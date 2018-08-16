@@ -1,5 +1,3 @@
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View,ScrollView,TextInput,AsyncStorage,TouchableOpacity} from 'react-native';
 
 import {MyButton} from './components';
 
