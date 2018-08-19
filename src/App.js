@@ -1,8 +1,11 @@
 import React ,{Component} from "react";
-import { View,Text,TouchableOpacity,TextInput,ScrollView,AsyncStorage,StyleSheet,Platform} from "react-native";
+import { View,Text,TouchableOpacity,TextInput,ScrollView,AsyncStorage,StyleSheet,Platform,ActivityIndicator} from "react-native";
 
 import {AddButton} from './components';
 
+ /* This is for show the items,
+ I cannot show items unless take them to a global variable*/
+  const items =[]; 
 
   export default class App extends Component{
     constructor(props){
@@ -10,58 +13,77 @@ import {AddButton} from './components';
 
       this.todo = this.todo.bind(this);
       this.lab = this.lab.bind(this);
-      this.show = this.show.bind(this);
+    
     
     }
+
+    /* State note for carry the whole todo list as JSON array string
+    state newNote for carry the new todo item */
     state = {
-      note : 'as',
-      newNote: 'asdasdas',
+      note : '',
+      newNote: '',
     };
 
-    show(){
-      allNotes = JSON.parse(this.state.note);
-      alert(JSON.stringify(allNotes))
-    }
-
+    /* Enter the Add button this will work
+    // This function firstly create unique key for next item
+    // fetch the current list as JSON object array
+    // take the new to do item and convert it to JSON object
+    Add the new item to array and send it to Storage. */
     lab(){
       let date = Date.now().toString(); //unique key of each item
 
-      allNotes = JSON.parse(this.state.note);
+      allNotes = JSON.parse(this.state.note); // Take notes - It comes to state from componentDidMount
       
-      let newObj = '{"id":"'+date+'","note":"'+this.state.newNote+'"}'; // New todo item
+      let newObj = '{"id":"'+date+'","note":"'+this.state.newNote+'"}'; // New todo item JSON object
 
-      allNotes.Notes.unshift(JSON.parse(newObj));
+      allNotes.Notes.unshift(JSON.parse(newObj)); // Add the new to array
       //alert(JSON.stringify(allNotes))
-      AsyncStorage.setItem("Notes",JSON.stringify(allNotes));
+      AsyncStorage.setItem("Notes",JSON.stringify(allNotes));  // Send the new array to Storage
     }
 
-    todo(item,run){ 
-       return(
-          
-            <View style={[styles.todoWrapper,styles.center]}>
+    /* This function works for each todo item */
+    todo(item){ 
+      return(
+         
+           <View style={[styles.todoWrapper,styles.center]}>
 
-              <View style={styles.todoLeft}>
-                <Text style={[styles.todoText]}>{item}</Text>
-              </View>
-              <View style={styles.todoRight}>
-                <TouchableOpacity onPress={run} style={styles.todoTouch}/>
-              </View>
-             
-            </View>
-          
-        );
-      };
-    
-    componentWillMount(){
+             <View style={styles.todoLeft}>
+               <Text style={[styles.todoText]}>{item}</Text>
+             </View>
+             <View style={styles.todoRight}>
+               <TouchableOpacity style={styles.todoTouch}/>
+             </View>
+            
+           </View>
+         
+       );
+     };
+
+
+    /* It will work after rendering
+    This function takes the current list from the Storage, If there is no data
+    it creates a free one.
+    */
+    componentDidMount(){
       AsyncStorage.getItem("Notes").then((value) => {
-     value ? this.setState({note:value}) : this.setState({note:'{"Notes":[]}'}); 
+      value ? this.setState({note:value}) : this.setState({note:'{"Notes":[]}'}); 
     });
     }
-   
-
 
 
     render(){
+       /* 
+       Render method works twice because of componentDidMount's setState. 
+       The first render there is no data in the state.note. 
+       I put the function to in if statement to works only if there is data
+     */
+      if(this.state.note){
+        // It takes the data and prepare to show. 
+        // I send the each todo item to a const items object. 
+        let notlar = JSON.parse(this.state.note);
+        notlar.Notes.map( (x) => items.push(x.note));
+      }
+    
       return(
         <View style={styles.container}>
           <View style={styles.topContainer}>
@@ -83,11 +105,11 @@ import {AddButton} from './components';
           <View style={styles.seperator}></View>
           
           <ScrollView>
-
-          {this.todo('Lab çalıştır',this.show)}
-
-      
-
+           
+            { 
+              // This shows item
+              items.map( (item) => this.todo(item) )
+            }
           </ScrollView>
           </View>
           
@@ -99,6 +121,7 @@ import {AddButton} from './components';
   }
 
 // TODO Styles Will go to another js file
+// Stylesheets, I try to make it seperate but cannot.
 const styles = StyleSheet.create({
   container:{
     flex:1,
@@ -179,4 +202,10 @@ const styles = StyleSheet.create({
     backgroundColor:'black',
     overflow:'hidden'
   },
+  activityIndicator: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 80
+ },
 });
