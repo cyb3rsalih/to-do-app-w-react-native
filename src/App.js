@@ -43,10 +43,11 @@ import {AddButton} from './components';
       allNotes.Notes.unshift(JSON.parse(newObj)); // Add the new to array
       //alert(JSON.stringify(allNotes))
       AsyncStorage.setItem("Notes",JSON.stringify(allNotes)).then(
+        // THIS IS UPDATE FUNC same as ComponentDidMount->
         AsyncStorage.getItem("Notes").then((value) => { value ? this.setState({note:JSON.parse(value)}) : this.setState({note:JSON.parse('{"Notes":[]}')}); 
           }));  // Send the new array to Storage  
 
-      this.setState({newNote:""})
+      this.setState({newNote:""}) // Make free the text input
     }
 
     /* This function works for each todo item */
@@ -112,7 +113,7 @@ import {AddButton} from './components';
           
           <FlatList 
           data={this.state.note}
-          renderItem= { ({item}) => <Text>{item.Notes.note}</Text>}
+          renderItem= { ({item}) => <Text>{item.note}</Text>}
           />
        
 
