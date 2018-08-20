@@ -14,7 +14,6 @@ import {AddButton} from './components';
       this.todo = this.todo.bind(this);
       this.lab = this.lab.bind(this);
       this.x  = this.x.bind(this);
-      this.showTheList = this.showTheList.bind(this);
     
     }
 
@@ -34,28 +33,27 @@ import {AddButton} from './components';
     // fetch the current list as JSON object array
     // take the new to do item and convert it to JSON object
     Add the new item to array and send it to Storage. */
-    lab(){
-      let date = Date.now().toString(); //unique key of each item
+   lab(){
+    let date = Date.now().toString(); //unique key of each item
 
-      allNotes = this.state.note; // Take notes - It comes to state from componentDidMount
+    const allNotes = [...this.state.note];
       
-      let newObj = {
+    let newObj = {
         id: date,
-        note: this.state.newNote        
-      }; // New todo item JSON object
+        note: this.state.newNote
+    }; // New todo item JSON object
 
-    allNotes.data.unshift(newObj); // Add the newItem to array
+    allNotes.unshift(newObj); // Add the new to array
     AsyncStorage.setItem("Notes",JSON.stringify(allNotes));
 
-    this.setState({newNote:"", note: allNotes }) // Make free the text and set allNotes
-      this.x()
-    }
+    this.setState({newNote:"", note: allNotes }) // Make free the text input
+}
 
     /* This function works for each todo item */
-    todo(item,id){ 
+    todo(item){ 
       return(
          
-           <View key={id} style={[styles.todoWrapper,styles.center]}>
+           <View style={[styles.todoWrapper,styles.center]}>
 
              <View style={styles.todoLeft}>
                <Text style={[styles.todoText]}>{item}</Text>
@@ -74,22 +72,11 @@ import {AddButton} from './components';
     This function takes the current list from the Storage, If there is no data
     it creates a free one.
     */
-    componentWillMount(){
-      genesisNote = {
-        data:[]
-      };
-
-      AsyncStorage.getItem("Notes").then( (value) => { value ? this.setState({note:JSON.parse(value)}) : this.setState({note:genesisNote}); 
+    componentDidMount(){
+      AsyncStorage.getItem("Notes").then((value) => { value ? this.setState({note:JSON.parse(value)}) : this.setState({note:JSON.parse('{"Notes":[]}')}); 
     });
     }
 
-
-    showTheList(){
-      list = this.state.note;
-      if(list){
-        list.data.map((item) => items.push(item.note))
-      }
-    }
 
 
 
@@ -123,8 +110,11 @@ import {AddButton} from './components';
           
           <ScrollView>
           
-        {this.showTheList()}
-        {items.map( (item,id) => this.todo(item,id))}
+          <FlatList 
+          data={this.state.note}
+          renderItem= { ({item}) => <Text>{item.note}</Text>}
+          />
+       
 
           </ScrollView>
           </View>
