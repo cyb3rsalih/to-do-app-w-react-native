@@ -1,5 +1,5 @@
 import React ,{Component} from "react";
-import { View,Text,TouchableOpacity,TextInput,ScrollView,AsyncStorage,StyleSheet,Platform,ActivityIndicator} from "react-native";
+import { View,Text,TouchableOpacity,TextInput,ScrollView,AsyncStorage,StyleSheet,Platform,ActivityIndicator,FlatList} from "react-native";
 
 import {AddButton} from './components';
 
@@ -13,7 +13,7 @@ import {AddButton} from './components';
 
       this.todo = this.todo.bind(this);
       this.lab = this.lab.bind(this);
-    
+      this.x  = this.x.bind(this);
     
     }
 
@@ -24,6 +24,10 @@ import {AddButton} from './components';
       newNote: '',
     };
 
+
+    x(){
+      alert(JSON.stringify(this.state.note));
+    }
     /* Enter the Add button this will work
     // This function firstly create unique key for next item
     // fetch the current list as JSON object array
@@ -32,13 +36,17 @@ import {AddButton} from './components';
     lab(){
       let date = Date.now().toString(); //unique key of each item
 
-      allNotes = JSON.parse(this.state.note); // Take notes - It comes to state from componentDidMount
+      allNotes = this.state.note; // Take notes - It comes to state from componentDidMount
       
       let newObj = '{"id":"'+date+'","note":"'+this.state.newNote+'"}'; // New todo item JSON object
 
       allNotes.Notes.unshift(JSON.parse(newObj)); // Add the new to array
       //alert(JSON.stringify(allNotes))
-      AsyncStorage.setItem("Notes",JSON.stringify(allNotes));  // Send the new array to Storage
+      AsyncStorage.setItem("Notes",JSON.stringify(allNotes)).then(
+        AsyncStorage.getItem("Notes").then((value) => { value ? this.setState({note:JSON.parse(value)}) : this.setState({note:JSON.parse('{"Notes":[]}')}); 
+          }));  // Send the new array to Storage  
+
+      this.setState({newNote:""})
     }
 
     /* This function works for each todo item */
@@ -51,7 +59,7 @@ import {AddButton} from './components';
                <Text style={[styles.todoText]}>{item}</Text>
              </View>
              <View style={styles.todoRight}>
-               <TouchableOpacity style={styles.todoTouch}/>
+               <TouchableOpacity onPress={this.x} style={styles.todoTouch}/>
              </View>
             
            </View>
@@ -65,10 +73,11 @@ import {AddButton} from './components';
     it creates a free one.
     */
     componentDidMount(){
-      AsyncStorage.getItem("Notes").then((value) => {
-      value ? this.setState({note:value}) : this.setState({note:'{"Notes":[]}'}); 
+      AsyncStorage.getItem("Notes").then((value) => { value ? this.setState({note:JSON.parse(value)}) : this.setState({note:JSON.parse('{"Notes":[]}')}); 
     });
     }
+
+
 
 
     render(){
@@ -77,12 +86,7 @@ import {AddButton} from './components';
        The first render there is no data in the state.note. 
        I put the function to in if statement to works only if there is data
      */
-      if(this.state.note){
-        // It takes the data and prepare to show. 
-        // I send the each todo item to a const items object. 
-        let notlar = JSON.parse(this.state.note);
-        notlar.Notes.map( (x) => items.push(x.note));
-      }
+   
     
       return(
         <View style={styles.container}>
@@ -90,7 +94,7 @@ import {AddButton} from './components';
           <View style={styles.top}>
           
             <View style={styles.topLeft}>
-              <TextInput value={this.state.newNote} onChangeText={(v) => this.setState({newNote:v}) } placeholder={'Yapılacaklarım'} style={styles.textInput}>
+              <TextInput value={this.state.newNote} onChangeText={(v) => this.setState({newNote:v}) } placeholder={'Yapılacaklar'} style={styles.textInput}>
              
               </TextInput>
             </View>
@@ -105,11 +109,13 @@ import {AddButton} from './components';
           <View style={styles.seperator}></View>
           
           <ScrollView>
-           
-            { 
-              // This shows item
-              items.map( (item) => this.todo(item) )
-            }
+          
+          <FlatList 
+          data={this.state.note}
+          renderItem= { ({item}) => <Text>{item.Notes.note}</Text>}
+          />
+       
+
           </ScrollView>
           </View>
           
