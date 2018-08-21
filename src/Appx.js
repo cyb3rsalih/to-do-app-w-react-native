@@ -3,6 +3,10 @@ import { View,Text,TouchableOpacity,TextInput,ScrollView,AsyncStorage,StyleSheet
 
 import {AddButton} from './components';
 
+ /* This is for show the items,
+ I cannot show items unless take them to a global variable*/
+  const items =[]; 
+
   export default class App extends Component{
     constructor(props){
       super(props);
@@ -10,21 +14,21 @@ import {AddButton} from './components';
       this.todo = this.todo.bind(this);
       this.lab = this.lab.bind(this);
       this.x  = this.x.bind(this);
-   
+      this.showTheList = this.showTheList.bind(this);
     
     }
 
     /* State note for carry the whole todo list as JSON array string
     state newNote for carry the new todo item */
     state = {
-      data : [],
+      note : '',
       newNote: '',
     };
 
 
   // JUST FOR TESTING
     x(){
-    alert(this.state.data)
+      alert(JSON.stringify(this.state.note)); 
     }
 
 
@@ -37,16 +41,18 @@ import {AddButton} from './components';
     */
     lab(){
       let date = Date.now().toString(); //unique key of each item
+
+      allNotes = this.state.note; // Take notes - It comes to state from componentDidMount
       
       let newObj = {
         id: date,
         note: this.state.newNote        
       }; // New todo item JSON object
 
-    this.setState({ data: [...this.state.data, newObj] })
-    AsyncStorage.setItem("Notes",JSON.stringify(this.state.data));
+    allNotes.data.unshift(newObj); // Add the newItem to array
+    AsyncStorage.setItem("Notes",JSON.stringify(allNotes));
 
-    this.setState({newNote:""}) // Make free the text and set allNotes
+    this.setState({newNote:"", note: allNotes }) // Make free the text and set allNotes
    
     }
 
@@ -54,13 +60,13 @@ import {AddButton} from './components';
     todo(item,id){ 
       return(
          
-           <View  style={[styles.todoWrapper,styles.center]}>
+           <View key={id} style={[styles.todoWrapper,styles.center]}>
 
-             <View key={id} style={styles.todoLeft}>
+             <View style={styles.todoLeft}>
                <Text style={[styles.todoText]}>{item}</Text>
              </View>
              <View style={styles.todoRight}>
-               <TouchableOpacity  onPress={this.x} style={styles.todoTouch}/>
+               <TouchableOpacity onPress={this.x} style={styles.todoTouch}/>
              </View>
             
            </View>
@@ -69,15 +75,27 @@ import {AddButton} from './components';
      };
 
 
-    /* It will work first
+    /* It will work before render
     This function takes the current list from the Storage, If there is no data
     it creates a free one.
     */
-    componentDidMount(){
+    componentWillMount(){
+      InitialNote = {
+        data:[]
+      };
 
-    AsyncStorage.getItem("Notes").then( (value) => { value ? this.setState({data:JSON.parse(value)}) : this.setState({data:[]}); 
+      AsyncStorage.getItem("Notes").then( (value) => { value ? this.setState({note:JSON.parse(value)}) : this.setState({note:InitialNote}); 
     });
-      
+    }
+
+
+    // I cannot use the JSON arraylist directly, so first I send the list to an array.
+    showTheList(){
+      list = this.state.note;
+      // Render method works twice, First time there is no item, second time data arrives
+      if(list){
+        list.map((item) => items.push(item.note))
+      }
     }
 
 
@@ -104,12 +122,12 @@ import {AddButton} from './components';
           <View style={styles.seperator}></View>
           
           <ScrollView>
-            <FlatList
-            data={this.state.data}
-            keyExtractor={(item, index) => item.id}
-            renderItem={ ({item}) => this.todo(item.note,item.id)
-            }
-            />
+          
+        {this.showTheList()}
+        {items.map( (item,id) => this.todo(item,id))
+        // showTheList send the notes to items array.
+        }
+      
           </ScrollView>
           </View>  
         </View>
