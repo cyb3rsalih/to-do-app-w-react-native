@@ -48,7 +48,7 @@ import {AddButton} from './components';
     AsyncStorage.setItem("Notes",JSON.stringify(allNotes));
 
     this.setState({newNote:"", note: allNotes }) // Make free the text and set allNotes
-      this.x()
+   
     }
 
     /* This function works for each todo item */
@@ -75,15 +75,17 @@ import {AddButton} from './components';
     it creates a free one.
     */
     componentWillMount(){
-      genesisNote = {
+      InitialNote = {
         data:[]
       };
 
-      AsyncStorage.getItem("Notes").then( (value) => { value ? this.setState({note:JSON.parse(value)}) : this.setState({note:genesisNote}); 
+      AsyncStorage.getItem("Notes").then( (value) => { value ? this.setState({note:JSON.parse(value)}) : this.setState({note:InitialNote}); 
     });
     }
 
 
+    // I cannot use the list directly so first I send the list to an array.
+  
     showTheList(){
       list = this.state.note;
       if(list){
@@ -124,7 +126,10 @@ import {AddButton} from './components';
           <ScrollView>
           
         {this.showTheList()}
-        {items.map( (item,id) => this.todo(item,id))}
+        {items.map( (item,id) => this.todo(item,id))
+        // showTheList send the notes to items array.
+        }
+        
 
           </ScrollView>
           </View>
