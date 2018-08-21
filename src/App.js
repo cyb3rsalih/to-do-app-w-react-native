@@ -27,7 +27,7 @@ import {AddButton} from './components';
 
 
     x(){
-      alert(JSON.stringify(this.state.note));
+      alert(JSON.stringify(this.state.note)); // JUST FOR TEST
     }
     /* Enter the Add button this will work
     // This function firstly create unique key for next item
