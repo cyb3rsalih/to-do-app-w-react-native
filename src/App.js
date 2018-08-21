@@ -44,9 +44,11 @@ import {AddButton} from './components';
       }; // New todo item JSON object
 
     this.setState({ data: [...this.state.data, newObj] })
-    AsyncStorage.setItem("Notes",JSON.stringify(this.state.data));
 
-    this.setState({newNote:""}) // Make free the text and set allNotes
+
+    AsyncStorage.setItem("Notes",JSON.stringify(this.state.data)).then(this.setState({newNote:""}));
+
+     // Make free the text and set allNotes
    
     }
 
@@ -105,6 +107,7 @@ import {AddButton} from './components';
           
           <ScrollView>
             <FlatList
+            inverted
             data={this.state.data}
             keyExtractor={(item, index) => item.id}
             renderItem={ ({item}) => this.todo(item.note,item.id)
