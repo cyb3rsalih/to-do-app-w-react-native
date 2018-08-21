@@ -26,14 +26,19 @@ import {AddButton} from './components';
     };
 
 
+  // JUST FOR TESTING
     x(){
-      alert(JSON.stringify(this.state.note)); // JUST FOR TEST
+      alert(JSON.stringify(this.state.note)); 
     }
-    /* Enter the Add button this will work
-    // This function firstly create unique key for next item
-    // fetch the current list as JSON object array
-    // take the new to do item and convert it to JSON object
-    Add the new item to array and send it to Storage. */
+
+
+    /* Add buttons OnPress
+    This function firstly create unique key for next item
+    fetch the current list as JSON object array
+    take the new todo item and convert it to JSON object
+    Add the new item to array and send it to Storage. 
+    Updates the states.
+    */
     lab(){
       let date = Date.now().toString(); //unique key of each item
 
@@ -70,7 +75,7 @@ import {AddButton} from './components';
      };
 
 
-    /* It will work after rendering
+    /* It will work before render
     This function takes the current list from the Storage, If there is no data
     it creates a free one.
     */
@@ -84,10 +89,10 @@ import {AddButton} from './components';
     }
 
 
-    // I cannot use the list directly so first I send the list to an array.
-  
+    // I cannot use the JSON arraylist directly, so first I send the list to an array.
     showTheList(){
       list = this.state.note;
+      // Render method works twice, First time there is no item, second time data arrives
       if(list){
         list.data.map((item) => items.push(item.note))
       }
@@ -96,13 +101,6 @@ import {AddButton} from './components';
 
 
     render(){
-       /* 
-       Render method works twice because of componentDidMount's setState. 
-       The first render there is no data in the state.note. 
-       I put the function to in if statement to works only if there is data
-     */
-   
-    
       return(
         <View style={styles.container}>
           <View style={styles.topContainer}>
@@ -129,12 +127,9 @@ import {AddButton} from './components';
         {items.map( (item,id) => this.todo(item,id))
         // showTheList send the notes to items array.
         }
-        
-
+      
           </ScrollView>
-          </View>
-          
-        
+          </View>  
         </View>
       );
     }
