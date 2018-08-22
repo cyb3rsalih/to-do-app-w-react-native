@@ -8,7 +8,7 @@ export default class App extends Component{
     super(props);
 
     this.todo = this.todo.bind(this);
-    this.lab = this.lab.bind(this);
+    this.addItem = this.addItem.bind(this);
     this.updateDatabase = this.updateDatabase.bind(this);
   }
 
@@ -26,7 +26,7 @@ export default class App extends Component{
   Add the new item to array and send it to Storage. 
   Updates the states.
   */
-  lab(){
+  addItem(){
     let date = Date.now().toString(); //unique key
     
     let newObj = { id: date, note: this.state.newNote}; 
@@ -41,6 +41,12 @@ export default class App extends Component{
     AsyncStorage.setItem("Notes",JSON.stringify(this.state.data)).then(this.setState({newNote:""}));
   }
 
+  removeItem(index) {
+    this.setState({
+      data: this.state.data.filter((item, i) => item.id !== index)
+    });
+  }
+
   /* This function works for each todo item */
   todo(item,id){ 
     return(
@@ -51,7 +57,7 @@ export default class App extends Component{
               <Text style={[styles.todoText]}>{item}</Text>
             </View>
             <View style={styles.todoRight}>
-              <TouchableOpacity  onPress={this.x} style={styles.todoTouch}/>
+              <TouchableOpacity  onPress={ () => this.removeItem(id)} style={styles.todoTouch}/>
             </View>
           
           </View>
@@ -83,7 +89,7 @@ export default class App extends Component{
             </TextInput>
           </View>
           <View style={styles.topRight}>
-            <AddButton onPress={this.lab} text={"Add"}/>
+            <AddButton onPress={this.addItem} text={"Add"}/>
           </View>    
 
         </View>
