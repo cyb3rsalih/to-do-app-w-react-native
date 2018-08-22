@@ -10,8 +10,7 @@ import {AddButton} from './components';
       this.todo = this.todo.bind(this);
       this.lab = this.lab.bind(this);
       this.x  = this.x.bind(this);
-   
-    
+      this.updateDatabase = this.updateDatabase.bind(this);
     }
 
     /* State note for carry the whole todo list as JSON array string
@@ -36,20 +35,18 @@ import {AddButton} from './components';
     Updates the states.
     */
     lab(){
-      let date = Date.now().toString(); //unique key of each item
+      let date = Date.now().toString(); //unique key
       
-      let newObj = {
-        id: date,
-        note: this.state.newNote        
-      }; // New todo item JSON object
+      let newObj = { id: date, note: this.state.newNote}; 
+      // New todo item
 
-    this.setState({ data: [...this.state.data, newObj] })
+    this.setState({ data: [...this.state.data, newObj] }, () => this.updateDatabase() )
+    // Add the new object to data array  
+    }
 
-
-    AsyncStorage.setItem("Notes",JSON.stringify(this.state.data)).then(this.setState({newNote:""}));
-
-     // Make free the text and set allNotes
-   
+    // Add the whole list to Storage
+    updateDatabase(){
+      AsyncStorage.setItem("Notes",JSON.stringify(this.state.data)).then(this.setState({newNote:""}));
     }
 
     /* This function works for each todo item */
