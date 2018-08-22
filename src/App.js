@@ -10,6 +10,7 @@ export default class App extends Component{
     this.todo = this.todo.bind(this);
     this.addItem = this.addItem.bind(this);
     this.updateDatabase = this.updateDatabase.bind(this);
+    this.removeItem = this.removeItem.bind(this);
   }
 
   /* State note for carry the whole todo list as JSON array string
@@ -44,7 +45,7 @@ export default class App extends Component{
   removeItem(index) {
     this.setState({
       data: this.state.data.filter((item, i) => item.id !== index)
-    });
+    }, () => updateDatabase() );
   }
 
   /* This function works for each todo item */
