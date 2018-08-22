@@ -85,9 +85,14 @@ export default class App extends Component{
         <View style={styles.top}>
         
           <View style={styles.topLeft}>
-            <TextInput value={this.state.newNote} onChangeText={(v) => this.setState({newNote:v}) } placeholder={'Yapılacaklar'} style={styles.textInput}>
+            <TextInput 
+            value={this.state.newNote} 
+            onChangeText={(v) => this.setState({newNote:v}) }placeholder={'Things I will do'} 
+            style={styles.textInput}
+            autoFocus = {true}
+            />
             
-            </TextInput>
+  
           </View>
           <View style={styles.topRight}>
             <AddButton onPress={this.addItem} text={"Add"}/>
