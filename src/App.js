@@ -45,7 +45,7 @@ export default class App extends Component{
   removeItem(index) {
     this.setState({
       data: this.state.data.filter((item, i) => item.id !== index)
-    }, () => updateDatabase() );
+    }, () => this.updateDatabase() );
   }
 
   /* This function works for each todo item */
