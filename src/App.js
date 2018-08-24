@@ -53,7 +53,6 @@ export default class App extends Component{
   /* This function works for each todo item */
   todo(item,id){ 
     return(
-        
           <View  style={[styles.todoWrapper,styles.center]}>
             <View key={id} style={styles.todoLeft}>
               <Text style={[styles.todoText]}>{item}</Text>
@@ -61,9 +60,7 @@ export default class App extends Component{
             <View style={styles.todoRight}>
               <TouchableOpacity  onPress={ () => this.removeItem(id)} style={styles.todoTouch}/>
             </View>
-          
           </View>
-        
       );
     };
 
@@ -86,23 +83,21 @@ export default class App extends Component{
         <View style={styles.top}>
         
           <View style={styles.topLeft}>
+ 
             <TextInput 
             value={this.state.newNote} 
-            onChangeText={(v) => this.setState({newNote:v}) }placeholder={'Things I will do'} 
+            onChangeText={(v) => this.setState({newNote:v})} placeholder={'Things I will do'} 
             style={styles.textInput}
             autoFocus = {true}
             />
-            
-  
+
           </View>
           <View style={styles.topRight}>
             <AddButton onPress={this.addItem} text={"Add"}/>
           </View>    
-
         </View>
         </View>
         <View style={styles.bot}>
-      
         <View style={styles.seperator}></View>
         
         <ScrollView>
@@ -111,8 +106,7 @@ export default class App extends Component{
           data={this.state.data}
           keyExtractor={(item, index) => item.id}
           renderItem={ ({item}) => this.todo(item.note,item.id)
-          }
-          />
+          }/>
         </ScrollView>
         </View>  
       </View>
@@ -203,10 +197,4 @@ const styles = StyleSheet.create({
     backgroundColor:'black',
     overflow:'hidden'
   },
-  activityIndicator: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 80
- },
 });
