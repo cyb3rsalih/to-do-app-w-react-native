@@ -55,7 +55,6 @@ export default class App extends Component{
     return(
         
           <View  style={[styles.todoWrapper,styles.center]}>
-
             <View key={id} style={styles.todoLeft}>
               <Text style={[styles.todoText]}>{item}</Text>
             </View>
@@ -171,8 +170,8 @@ const styles = StyleSheet.create({
   todoWrapper:{
     height:80,
     backgroundColor:'white',
-    margin:20,
-    marginBottom:-5,
+    margin:15,
+    marginBottom:5,
     borderRadius:30,
     flexDirection:'row',
     borderColor:'black',
