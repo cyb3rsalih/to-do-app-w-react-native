@@ -28,13 +28,15 @@ export default class App extends Component{
   Updates the states.
   */
   addItem(){
-    let date = Date.now().toString(); //unique key
-    
-    let newObj = { id: date, note: this.state.newNote}; 
-    // New todo item
+    if(this.state.newNote){
+      let date = Date.now().toString(); //unique key
+      
+      let newObj = { id: date, note: this.state.newNote}; 
+      // New todo item
 
-  this.setState({ data: [...this.state.data, newObj] }, () => this.updateDatabase() )
-  // Add the new object to data array  
+    this.setState({ data: [...this.state.data, newObj] }, () => this.updateDatabase() )
+    // Add the new object to data array 
+    }
   }
 
   // Add the whole list to Storage
