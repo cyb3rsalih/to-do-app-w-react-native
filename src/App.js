@@ -1,7 +1,14 @@
 import React ,{Component} from "react";
 import { View,Text,TouchableOpacity,TextInput,ScrollView,AsyncStorage,StyleSheet,Platform,ActivityIndicator,FlatList} from "react-native";
 
+import {  AdMobBanner } from 'react-native-admob'
+
 import {AddButton} from './components';
+
+var SoundPlayer = require('react-native-sound');
+
+var song = null;
+
 
 export default class App extends Component{
   constructor(props){
@@ -11,6 +18,9 @@ export default class App extends Component{
     this.addItem = this.addItem.bind(this);
     this.updateDatabase = this.updateDatabase.bind(this);
     this.removeItem = this.removeItem.bind(this);
+    // For sound
+    this.ButtonPlay = this.ButtonPlay.bind(this);
+    this.song = this.song.bind(this);
   }
 
   /* State note for carry the whole todo list as JSON array string
@@ -37,6 +47,8 @@ export default class App extends Component{
     this.setState({ data: [...this.state.data, newObj] }, () => this.updateDatabase() )
     // Add the new object to data array 
     }
+
+    this.ButtonPlay();
   }
 
   // Add the whole list to Storage
@@ -48,6 +60,8 @@ export default class App extends Component{
     this.setState({
       data: this.state.data.filter((item, i) => item.id !== index)
     }, () => this.updateDatabase() );
+
+    this.ButtonPlay();
   }
 
   /* This function works for each todo item */
@@ -64,15 +78,31 @@ export default class App extends Component{
       );
     };
 
+  ButtonPlay(){
+      if(song != null){
+        song.play((success) => { 
+          if(!success){
+            console.warn("ERROR");      
+        }
+          } )
+      }
+    }
+
+  song(){
+    song = new SoundPlayer('blob.mp3',SoundPlayer.MAIN_BUNDLE, (error)  => {
+    if(error){ console.warn(error);} 
+    }); 
+  }
 
   /* It will work first
   This function takes the current list from the Storage, If there is no data
-  it creates a free one.
-  */
+  it creates a free one. */
   componentDidMount(){
+    
+    this.song()
 
-  AsyncStorage.getItem("Notes").then( (value) => { value ? this.setState({data:JSON.parse(value)}) : this.setState({data:[]}); 
-  });
+    AsyncStorage.getItem("Notes").then( (value) => { value ? this.setState({data:JSON.parse(value)}) : this.setState({data:[]}); 
+    });
     
   }
   
@@ -107,7 +137,15 @@ export default class App extends Component{
           keyExtractor={(item, index) => item.id}
           renderItem={ ({item}) => this.todo(item.note,item.id)
           }/>
+
         </ScrollView>
+        <View style={{backgroundColor:'black',height:60}}>
+          <AdMobBanner
+          adSize="fullBanner"
+          adUnitID="ca-app-pub-3940256099942544/6300978111"
+          testDevices={[AdMobBanner.simulatorId]}
+        />
+        </View>
         </View>  
       </View>
     );
