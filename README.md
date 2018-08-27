@@ -7,8 +7,16 @@ Simple ToDo App w/ React Native
 #### 1- Install essentials from [React Native Offical Page](https://facebook.github.io/react-native/docs/getting-started.html).
 
 #### 2- Install dependencies 
+##### Node Modules  
+
 `$ cd ProjectFile`  
 `$ npm install`  
+
+
+##### Google Admob Integration
+
+[React Native Admob Component](https://github.com/sbugert/react-native-admob)  
+
 #### 3- Run Project
 `react-native run-ios --port=8088`  
 
